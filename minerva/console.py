@@ -68,9 +68,10 @@ class WorkerDisplay:
     def job_done(self, file_id: int, label: str, ok: bool, note: str = "") -> None:
         with self._lock:
             job = self.active.pop(file_id, None)
-            self._total_done += 1
-            if job and job["size"] and ok:
-                self._total_bytes += job["size"]
+            if ok:
+                self._total_done += 1
+                if job and job["size"]:
+                    self._total_bytes += job["size"]
             icon = "[green]✓[/green]" if ok else "[red]✗[/red]"
             color = "green" if ok else "red"
             entry = f"{icon} [{color}]{label}[/{color}]"
