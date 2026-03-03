@@ -9,6 +9,7 @@ from minerva.downloaders import Downloader, ProgressCallback
 
 ARIA_PROGRESS_REGEX = re.compile(r"\[#\w+\s+([^/]+)/([^\(]+)\((\d+)%\).*?DL:([^\s\]]+)(?:\s+ETA:([^\]]+))?")
 
+
 class Aria2c(Downloader):
     async def __call__(
         self, url: str, dest: Path, size: int, connections: int, pre_allocation: str, on_progress: ProgressCallback

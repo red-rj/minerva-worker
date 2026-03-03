@@ -22,7 +22,7 @@ COPY . .
 
 RUN uv venv
 
-RUN uv pip install -e .  
+RUN uv pip install -e .
 
 FROM python:3.13-slim AS runtime
 

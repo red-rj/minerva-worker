@@ -18,5 +18,10 @@ async def download_file(
         downloader = HTTPX()
 
     await downloader(
-        url=url, dest=dest, size=known_size, connections=aria2c_connections, pre_allocation=pre_allocation, on_progress=on_progress
+        url=url,
+        dest=dest,
+        size=known_size,
+        connections=aria2c_connections,
+        pre_allocation=pre_allocation,
+        on_progress=on_progress,
     )

@@ -34,9 +34,7 @@ async def worker_loop(
     console.print(f"Concurrency:   {concurrency}")
     console.print(f"Retries:       {MAX_RETRIES}")
     console.print(f"Keep files:    {'yes' if keep_files else 'no'}")
-    console.print(
-        f"Downloader:    {f'aria2c ({aria2c_connections} conns/job)' if ARIA2C else 'httpx'}"
-    )
+    console.print(f"Downloader:    {f'aria2c ({aria2c_connections} conns/job)' if ARIA2C else 'httpx'}")
     console.print()
 
     if not ARIA2C:
