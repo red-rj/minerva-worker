@@ -34,6 +34,7 @@ class WorkerDisplay:
         self._lock = threading.Lock()
         self._session_start = time.monotonic()
         self._total_done = 0
+        self._total_fails = 0
         self._total_bytes = 0
         self._username = None
 
@@ -76,6 +77,8 @@ class WorkerDisplay:
                 self._total_done += 1
                 if job and isinstance(job["size"], int):
                     self._total_bytes += job["size"]
+            else:
+                self._total_fails += 1
             icon = "[green]✓[/green]" if ok else "[red]✗[/red]"
             color = "green" if ok else "red"
             entry = f"{icon} [{color}]{label}[/{color}]"
@@ -87,9 +90,12 @@ class WorkerDisplay:
         now = time.monotonic()
 
         with self._lock:
+            snapshot = list(self.active.values())
             elapsed_total = now - self._session_start
             done_count = self._total_done
+            fail_count = self._total_fails
             total_bytes = self._total_bytes
+            total_speed = sum(x["speed"] for x in snapshot)
 
         h = int(elapsed_total // 3600)
         m = int((elapsed_total % 3600) // 60)
@@ -117,7 +123,9 @@ class WorkerDisplay:
         stats.add_column(justify="right")
         stats.add_row(
             f"Uptime: [dim]{h:02d}:{m:02d}:{s:02d}[/dim] "
-            + f"Uploaded: [dim]{done_count} ({humanize.naturalsize(total_bytes)})[/dim]",
+            + f"Uploaded: [dim]{humanize.naturalsize(total_bytes) if total_bytes else 0} ({done_count} files)[/dim] "
+            + f"Failures: [dim]{fail_count}[/dim] "
+            + f"Speed: [dim]{humanize.naturalsize(total_speed, binary=True, gnu=False, format='%.2f').replace(' ', '')}/s[/dim]",
             f"{self._username} #{rank} [dim]({humanize.naturalsize(float(uploaded)) if uploaded else 0})[/dim]",
         )
 
